@@ -1,6 +1,6 @@
 use std::collections::LinkedList;
 
-struct ShoppingCart<T> {
+struct ShoppingCart<T: PartialEq + AsRef<str>> {
     items: LinkedList<T>,
 }
 
@@ -11,15 +11,12 @@ impl<T: PartialEq + AsRef<str>> ShoppingCart<T> {
         }
     }
 
-    fn add_item(&mut self, item: T) {
+    fn add_item(mut self, item: T) -> Self {
         self.items.push_back(item);
+        self
     }
 
-    fn get_cart(&mut self) -> LinkedList<T> {
-        self.items
-    }
-
-    fn get_discount_percentage(items:LinkedList<T>) -> i32 {
+    fn get_discount_percentage(&self) -> i32 {
         if self.items.iter().any(|item| item.as_ref() == "Book") {
             5
         } else {
@@ -29,16 +26,9 @@ impl<T: PartialEq + AsRef<str>> ShoppingCart<T> {
 }
 
 fn main() {
-    let mut cart = ShoppingCart::new();
+    let cart = ShoppingCart::new()
+        .add_item("Pen".to_string())
+        .add_item("Book".to_string());
 
-      cart.add_item("Pen".to_string());
-
-
-    let discount = cart.get_discount_percentage(cart.get_cart());
-    println!("Discount percentage: {}", discount);
-
-    cart.add_item("Book".to_string());
-
-    let discount = cart.get_discount_percentage(cart.get_cart());
-    println!("Discount percentage: {}", discount);
+    println!("Discount percentage: {}", cart.get_discount_percentage());
 }
