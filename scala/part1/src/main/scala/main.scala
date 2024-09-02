@@ -36,3 +36,12 @@ object TipCalculator {
         else 0
     }
 }
+
+def replan(plan: List[String], newCity: String, beforeCity: String): List[String] = {
+    val beforeIndex = plan.indexOf(beforeCity)
+    
+    val citiesBefore = plan.slice(0, beforeIndex)
+    val citiesAfter = plan.slice(beforeIndex, plan.size)
+    
+    citiesBefore.appended(newCity).appendedAll(citiesAfter)
+}
