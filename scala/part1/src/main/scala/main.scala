@@ -1,22 +1,16 @@
 
 @main
 def main(): Unit = {
-    val shoppingCart = ShoppingCart
-    val items = List("Book", "Shirt", "Pants")
-    val discount = shoppingCart.getDiscountPercentage(items)
-    println(s"Discount percentage: $discount%")
 
-    var names: List[String] = List.empty
+}
 
-    println(TipCalculator.getTipPercentage(names))
+def rankerWords(wordScore: String => Int, words: List[String]): List[String] = {
+    def negativeScore(words: String): Int = -wordScore(word)
+    words.sortBy(negativeScore)
+}
 
-    names = List("Alice", "Bob", "Charlie")
-
-    println(TipCalculator.getTipPercentage(names))
-
-    names = names ::: List("David", "Eve", "Frank")
-
-    println(TipCalculator.getTipPercentage(names))
+def score(word: String): Int = {
+    word.replaceAll("a", "").length
 }
 
 object ShoppingCart {
@@ -39,9 +33,10 @@ object TipCalculator {
 
 def replan(plan: List[String], newCity: String, beforeCity: String): List[String] = {
     val beforeIndex = plan.indexOf(beforeCity)
-    
+
     val citiesBefore = plan.slice(0, beforeIndex)
     val citiesAfter = plan.slice(beforeIndex, plan.size)
-    
+
     citiesBefore.appended(newCity).appendedAll(citiesAfter)
 }
+
