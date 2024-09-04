@@ -1,12 +1,41 @@
 package main
 
-func main() {
-	cart := ShoppingCart{}
+import (
+	"sort"
+	"strings"
+)
 
-	cart.addItem("Phone")
-	println(cart.getDiscountPercentage(cart.items))
-	cart.addItem("Book")
-	println(cart.getDiscountPercentage(cart.items))
+func main() {
+	cities := []string{"Paris", "Berlin", "London", "Rome", "Madrid"}
+	words := rankerWords(wordSorter, score, cities)
+
+	for _, word := range words {
+		println(word)
+	}
+
+	for _, word := range cities {
+		println(word)
+	}
+}
+
+func rankerWords(wordSort func([]string, func(string) int) []string, wordScore func(string) int, words []string) []string {
+	newArr := make([]string, len(words))
+	newArr = words
+	wordSort(newArr, wordScore)
+
+	return newArr
+}
+
+func wordSorter(words []string, sortf func(string) int) []string {
+	sort.Slice(words, func(i, j int) bool {
+		return sortf(words[i]) > sortf(words[j])
+	})
+
+	return words
+}
+
+func score(word string) int {
+	return len(strings.ReplaceAll(word, "a", ""))
 }
 
 type ShoppingCart struct {
