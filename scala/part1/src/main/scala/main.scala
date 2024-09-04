@@ -1,12 +1,14 @@
 
 @main
 def main(): Unit = {
-
+    val cities = List("Paris", "Berlin", "London", "Rome", "Madrid")
+    def score(word: String): Int = word.replaceAll("a", "").length
+    
+    println(rankerWords(score, cities))
 }
 
 def rankerWords(wordScore: String => Int, words: List[String]): List[String] = {
-    def negativeScore(words: String): Int = -wordScore(word)
-    words.sortBy(negativeScore)
+    words.sortBy(wordScore).reverse
 }
 
 def score(word: String): Int = {
