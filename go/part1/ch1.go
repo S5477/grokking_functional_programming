@@ -6,24 +6,21 @@ import (
 )
 
 func main() {
-	cities := []string{"Paris", "Berlin", "London", "Rome", "Madrid"}
-	words := rankerWords(wordSorter, score, cities)
-
-	for _, word := range words {
-		println(word)
-	}
-
-	for _, word := range cities {
-		println(word)
-	}
 }
 
 func rankerWords(wordSort func([]string, func(string) int) []string, wordScore func(string) int, words []string) []string {
-	newArr := make([]string, len(words))
-	newArr = words
+	newArr := deepCopyPersonSlice(words)
 	wordSort(newArr, wordScore)
 
 	return newArr
+}
+
+func deepCopyPersonSlice(arr []string) []string {
+	result := make([]string, len(arr))
+	for i, p := range arr {
+		result[i] = p
+	}
+	return result
 }
 
 func wordSorter(words []string, sortf func(string) int) []string {
