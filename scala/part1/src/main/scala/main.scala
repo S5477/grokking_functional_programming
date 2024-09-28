@@ -7,6 +7,14 @@ def main(): Unit = {
     println(rankerWords(score, cities))
 }
 
+def hightScoringWords(wordScore: String => Int, words: List[String]): List[String] = {
+    words.filter(word => wordScore(word) > 1)
+}
+
+def wordScores(wordScore: String => Int, words: List[String]): List[Int] = {
+    words.map(wordScore)
+}
+
 def rankerWords(wordScore: String => Int, words: List[String]): List[String] = {
     words.sortBy(wordScore).reverse
 }
