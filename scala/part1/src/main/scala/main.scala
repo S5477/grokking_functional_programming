@@ -7,8 +7,8 @@ def main(): Unit = {
     println(rankerWords(score, cities))
 }
 
-def hightScoringWords(wordScore: String => Int, words: List[String]): Int => List[String] = {
-    higherThan => words.filter(word => wordScore(word) > higherThan)
+def hightScoringWords(wordScore: String => Int): Int => List[String] => List[String] = {
+    higherThan => words => words.filter(word => wordScore(word) > higherThan)
 }
 
 def wordScores(wordScore: String => Int, words: List[String]): List[Int] = {
