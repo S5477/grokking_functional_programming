@@ -2,9 +2,11 @@
 @main
 def main(): Unit = {
     val cities = List("Paris", "Berlin", "London", "Rome", "Madrid")
-    def score(word: String): Int = word.replaceAll("a", "").length
-    
-    println(rankerWords(score, cities))
+    println(cumulativeScore(score, cities))
+}
+
+def cumulativeScore(wordScore: String => Int, words: List[String]): Int = {
+    words.foldLeft(0)((acc, word) => acc + wordScore(word))
 }
 
 def hightScoringWords(wordScore: String => Int): Int => List[String] => List[String] = {
@@ -17,10 +19,6 @@ def wordScores(wordScore: String => Int, words: List[String]): List[Int] = {
 
 def rankerWords(wordScore: String => Int, words: List[String]): List[String] = {
     words.sortBy(wordScore).reverse
-}
-
-def score(word: String): Int = {
-    word.replaceAll("a", "").length
 }
 
 object ShoppingCart {
@@ -50,3 +48,10 @@ def replan(plan: List[String], newCity: String, beforeCity: String): List[String
     citiesBefore.appended(newCity).appendedAll(citiesAfter)
 }
 
+def score(word: String): Int = {
+    word.replaceAll("a", "").length
+}
+
+def bonus(word: String): Int = {
+    if (word.contains("c")) 5 else 0
+}
