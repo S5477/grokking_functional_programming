@@ -13,6 +13,12 @@ def main(): Unit = {
       )
     )
   ))
+
+  println(for {
+    book <- books
+    author <- book.authors
+    movie <- bookAdaption(author)
+  } yield s"You may like ${movie.title}, " + s"because you liked $author's ${book.title}")
 }
 
 case class Book(title: String, authors: List[String])
