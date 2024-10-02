@@ -3,7 +3,20 @@
 def main(): Unit = {
     val cities = List("Paris", "Berlin", "London", "Rome", "Madrid")
     println(cumulativeScore(score, cities))
+
+    val numbers = List(5,1,2,4,100)
+    println(numbers.foldLeft(0)((acc, number) => acc + number))
+
+    val languages = List("scala", "rust", "ada")
+    println(languages.foldLeft(0)((acc, word) => acc + word.length))
+
+    val languages2 = List("scala", "haskell", "rust", "ada")
+    println(languages2.foldLeft(0)((acc, word) => acc + word.length - word.replaceAll("s", "").length))
+
+    val numbers2 = List(5,1,2,4,15)
+    println(numbers2.foldLeft(Int.MinValue)((max, number) => if(max < number)  number else max))
 }
+
 
 def cumulativeScore(wordScore: String => Int, words: List[String]): Int = {
     words.foldLeft(0)((acc, word) => acc + wordScore(word))
