@@ -6,13 +6,19 @@ def main(): Unit = {
     Book("The Hobbit", List("Tolkien"))
   )
 
-  println(books.map(_.authors).flatten)
+  println(books.flatMap(_.authors).flatMap(bookAdaption))
 }
 
-case class  Book(title: String, authors: List[String])
+case class Book(title: String, authors: List[String])
+case class Movie(title: String)
 
-
-
+def bookAdaption(author: String): List[Movie] = {
+  if(author == "Tolkien") {
+    List(Movie("An Unexpected Journey"), Movie("The Desolation of Smaug"))
+  } else {
+    List.empty
+  }
+}
 
 
 
