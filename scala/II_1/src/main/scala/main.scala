@@ -6,7 +6,13 @@ def main(): Unit = {
     Book("The Hobbit", List("Tolkien"))
   )
 
-  println(books.flatMap(_.authors).flatMap(bookAdaption))
+  println(books.flatMap(
+    book => book.authors.flatMap(
+      author => bookAdaption(author).map(
+        movie => s"You may like ${movie.title}, " + s"because you liked $author's ${book.title}"
+      )
+    )
+  ))
 }
 
 case class Book(title: String, authors: List[String])
