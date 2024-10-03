@@ -1,20 +1,29 @@
 
 @main
 def main(): Unit = {
-  val xs = List(1)
-  val ys = List(-2, 7)
-  val zs = List(3,4)
+  val points = List(Point(5 ,2), Point(1, 1))
+  val radiuses = List(2, 1)
 
   for {
-    x <- xs
-    y <- ys
-    z <- zs
-  } yield Point(x, y, z)
+    radius <- radiuses
+    point <- points.filter(p => isInside(p, radius))
+  } yield println(point)
 
-  println(xs.flatMap(x => ys.flatMap(y => zs.map(z => Point(x, y, z)))))
+  for {
+    radius <- radiuses
+    point <- points
+    if isInside(point, radius)
+  } yield println(point)
+  
+  
 }
 
-case class Point(x: Int, y: Int, z: Int = 0)
+case class Point(x: Int, y: Int)
+
+
+def isInside(pint: Point, radius: Int): Boolean = {
+  radius * radius >= pint.x * pint.x + pint.y * pint.y
+}
 
 def recommendationFlatMap(books: List[Book]): Unit = {
   println(books.flatMap(
