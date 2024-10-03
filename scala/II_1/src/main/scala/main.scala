@@ -1,25 +1,46 @@
 
 @main
 def main(): Unit = {
-  val points = List(Point(5 ,2), Point(1, 1))
-  val radiuses = List(2, 1)
+  for {
+    validateName <- validateName("WWII")
+    validateStart <- validateStart(1939, 1945)
+    validateEnd <- validateEnd(1945)
+  } yield println(Event(validateName, validateStart, validateEnd))
 
   for {
-    radius <- radiuses
-    point <- points.filter(p => isInside(p, radius))
-  } yield println(point)
+    validateName <- validateName("")
+    validateStart <- validateStart(1939, 1945)
+    validateEnd <- validateEnd(1945)
+  } yield println(Event(validateName, validateStart, validateEnd))
 
   for {
-    radius <- radiuses
-    point <- points
-    if isInside(point, radius)
-  } yield println(point)
-  
-  
+    validateName <- validateName("WWII")
+    validateStart <- validateStart(1955, 1945)
+    validateEnd <- validateEnd(1945)
+  } yield println(Event(validateName, validateStart, validateEnd))
+
+  for {
+    validateName <- validateName("WWII")
+    validateStart <- validateStart(1939, 1945)
+    validateEnd <- validateEnd(300)
+  } yield println(Event(validateName, validateStart, validateEnd))
 }
 
 case class Point(x: Int, y: Int)
 
+case class Event(name: String, start: Int, end: Int)
+
+def validateName(name: String): Option[String] = {
+  if (name.isEmpty) None else Some(name)
+}
+
+def validateStart(start: Int, end: Int): Option[Int] = {
+  if (end > start) None else Some(end)
+}
+
+def validateEnd(end: Int): Option[Int] = {
+  if (end > 2040) None else Some(end)
+}
 
 def isInside(pint: Point, radius: Int): Boolean = {
   radius * radius >= pint.x * pint.x + pint.y * pint.y
