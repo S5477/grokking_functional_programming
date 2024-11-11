@@ -38,7 +38,7 @@ def parseShow(rawShow: String) : Option[TvShows] = {
 }
 
 def extractName(raw: String): Option[String] = {
-  val breacketOpen = rawShow.indexOf('(')
+  val breacketOpen = raw.indexOf('(')
 
   val yearStrOpt = if (breacketOpen) {
     Some(raw.substring(0, breacketOpen).trim)
@@ -46,23 +46,25 @@ def extractName(raw: String): Option[String] = {
 }
 
 def extractYearStart(raw: String): Option[Int] = {
-  val breacketOpen = rawShow.indexOf('(')
-  val dash = rawShow.indexOf('-')
+  val breacketOpen = raw.indexOf('(')
+  val dash = raw.indexOf('-')
 
-  val yearStrOpt = if(breacketOpen != -1 && dash > breacketOpen + 1){
-    Some(raw.substring(breacketOpen + 1, dash))
-  } else None
-
-  yearStrOpt.map(yeStr => yeStr.toIntOption)
+  for {
+    yearStr <- if(breacketOpen != -1 && dash > breacketOpen + 1)
+                  Some(raw.substring(breacketOpen + 1, dash))
+                else None
+    year <- yearStr.toIntOption
+  } yield year
 }
 
 def extractYearEnd(raw: String): Option[Int] = {
-  val breacketClose = rawShow.indexOf(')')
-  val dash = rawShow.indexOf('-')
+  val breacketClose = raw.indexOf(')')
+  val dash = raw.indexOf('-')
 
-  val yearStrOpt = if (breacketClose == -1 && dash < breacketOpen + 1) {
-    Some(raw.substring(dash + 1, breacketClose))
-  } else None
-
-  yearStrOpt.map(yeStr => yeStr.toIntOption)
+  for {
+    yearStr <- if (breacketOpen == -1 && dash + 1 < breacketClose)
+      Some(raw.substring(bdash + 1, breacketClose))
+    else None
+    year <- yearStr.toIntOption
+  } yield year
 }
