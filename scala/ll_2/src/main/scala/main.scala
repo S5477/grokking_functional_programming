@@ -4,16 +4,65 @@
 @main
 def main(): Unit = {
   val rawShows = List(
-    TvShows(title = "Breaking Bad", start = 2008, end = 2013),
-    TvShows(title = "The Wire", start = 2002, end = 2008),
-    TvShows(title = "Mad Men", start = 2007, end = 2015)
+    "Breaking Bad (2008-2013)",
+    "The Wire (2002-2008)",
+    "Mad Men (2007-2015)"
   )
 
-  println(sortShows(rawShows))
+  println(SortRawShows(rawShows))
 }
 
-  case class TvShows(title: String, start: Int, end: Int)
+case class TvShows(title: String, start: Int, end: Int)
 
-  def sortShows(shows: List[TvShows]): List[TvShows] = {
-    shows.sortBy(tvShows => tvShows.end - tvShows.start).reverse
-  }
+def sortShows(shows: List[TvShows]): List[TvShows] = {
+  shows.sortBy(tvShows => tvShows.end - tvShows.start).reverse
+}
+
+def SortRawShows(rawShows : List[String]) : List[TvShows] = {
+  val tvShows = parseShows(rawShows)
+  sortShows(tvShows)
+}
+def parseShows(rawShows: List[String]) : List[TvShows] = {
+  rawShows.map(parseShow)
+}
+
+def parseShow(rawShow: String) : Option[TvShows] = {
+  for {
+    name <- extractName(rawShow)
+    yearStart <- extractYearStart(rawShow)
+    yearEnd <- extractYearEnd(rawShow)
+  } yield TvShows(name, yearStart, yearEnd)
+  val breacketOpen = rawShow.indexOf('(')
+  val breacketClose = rawShow.indexOf(')')
+  val dash = rawShow.indexOf('-')
+}
+
+def extractName(raw: String): Option[String] = {
+  val breacketOpen = rawShow.indexOf('(')
+
+  val yearStrOpt = if (breacketOpen) {
+    Some(raw.substring(0, breacketOpen).trim)
+  } else None
+}
+
+def extractYearStart(raw: String): Option[Int] = {
+  val breacketOpen = rawShow.indexOf('(')
+  val dash = rawShow.indexOf('-')
+
+  val yearStrOpt = if(breacketOpen != -1 && dash > breacketOpen + 1){
+    Some(raw.substring(breacketOpen + 1, dash))
+  } else None
+
+  yearStrOpt.map(yeStr => yeStr.toIntOption)
+}
+
+def extractYearEnd(raw: String): Option[Int] = {
+  val breacketClose = rawShow.indexOf(')')
+  val dash = rawShow.indexOf('-')
+
+  val yearStrOpt = if (breacketClose == -1 && dash < breacketOpen + 1) {
+    Some(raw.substring(dash + 1, breacketClose))
+  } else None
+
+  yearStrOpt.map(yeStr => yeStr.toIntOption)
+}
