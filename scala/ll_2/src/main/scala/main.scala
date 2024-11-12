@@ -32,15 +32,12 @@ def parseShow(rawShow: String) : Option[TvShows] = {
     yearStart <- extractYearStart(rawShow)
     yearEnd <- extractYearEnd(rawShow)
   } yield TvShows(name, yearStart, yearEnd)
-  val breacketOpen = rawShow.indexOf('(')
-  val breacketClose = rawShow.indexOf(')')
-  val dash = rawShow.indexOf('-')
 }
 
 def extractName(raw: String): Option[String] = {
   val breacketOpen = raw.indexOf('(')
 
-  val yearStrOpt = if (breacketOpen) {
+  val yearStrOpt = if (breacketOpen > 0) {
     Some(raw.substring(0, breacketOpen).trim)
   } else None
 }
