@@ -23,7 +23,7 @@ def SortRawShows(rawShows : List[String]) : List[TvShow] = {
   sortShows(TvShow)
 }
 def parseShows(rawShows: List[String]) : List[TvShow] = {
-  rawShows.map(parseShow).map(_.toList)
+  rawShows.map(parseShow).flatMap(_.toList)
 }
 
 def parseShow(rawShow: String) : Option[TvShow] = {
