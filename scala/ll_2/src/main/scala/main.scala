@@ -12,34 +12,34 @@ def main(): Unit = {
   println(SortRawShows(rawShows))
 }
 
-case class TvShows(title: String, start: Int, end: Int)
+case class TvShow(title: String, start: Int, end: Int)
 
-def sortShows(shows: List[TvShows]): List[TvShows] = {
-  shows.sortBy(tvShows => tvShows.end - tvShows.start).reverse
+def sortShows(shows: List[TvShow]): List[TvShow] = {
+  shows.sortBy(TvShow => TvShow.end - TvShow.start).reverse
 }
 
-def SortRawShows(rawShows : List[String]) : List[TvShows] = {
-  val tvShows = parseShows(rawShows)
-  sortShows(tvShows)
+def SortRawShows(rawShows : List[String]) : List[TvShow] = {
+  val TvShow = parseShows(rawShows)
+  sortShows(TvShow)
 }
-def parseShows(rawShows: List[String]) : List[TvShows] = {
+def parseShows(rawShows: List[String]) : List[TvShow] = {
   rawShows.map(parseShow)
 }
 
-def parseShow(rawShow: String) : Option[TvShows] = {
+def parseShow(rawShow: String) : Option[TvShow] = {
   for {
     name <- extractName(rawShow)
-    yearStart <- extractYearStart(rawShow)
-    yearEnd <- extractYearEnd(rawShow)
-  } yield TvShows(name, yearStart, yearEnd)
+    yearStart <- extractYearStart(rawShow).orElse(extractSingleYear(rawShow))
+    yearEnd <- extractYearEnd(rawShow).orElse(extractSingleYear(rawShow))
+  } yield TvShow(name, yearStart, yearEnd)
 }
 
 def extractName(raw: String): Option[String] = {
   val breacketOpen = raw.indexOf('(')
 
-  val yearStrOpt = if (breacketOpen > 0) {
-    Some(raw.substring(0, breacketOpen).trim)
-  } else None
+  for {
+    name <- Some(raw.substring(0, breacketOpen).trim)
+  } yield name
 }
 
 def extractYearStart(raw: String): Option[Int] = {
@@ -59,8 +59,21 @@ def extractYearEnd(raw: String): Option[Int] = {
   val dash = raw.indexOf('-')
 
   for {
-    yearStr <- if (breacketOpen == -1 && dash + 1 < breacketClose)
-      Some(raw.substring(bdash + 1, breacketClose))
+    yearStr <- if (dash != -1 && dash + 1 < breacketClose)
+      Some(raw.substring(dash + 1, breacketClose))
+    else None
+    year <- yearStr.toIntOption
+  } yield year
+}
+
+def extractSingleYear(raw: String): Option[Int] = {
+  val breacketClose = raw.indexOf(')')
+  val breacketOpen = raw.indexOf('(')
+  val dash = raw.indexOf('-')
+
+  for {
+    yearStr <- if (dash == -1 && breacketOpen != -1 && breacketClose > breacketOpen + 1)
+      Some(raw.substring(breacketOpen + 1, breacketClose))
     else None
     year <- yearStr.toIntOption
   } yield year
