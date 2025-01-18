@@ -78,3 +78,10 @@ def extractSingleYear(raw: String): Option[Int] = {
     year <- yearStr.toIntOption
   } yield year
 }
+
+def addOrResing(parsedShows: Option[List[TvShow]], newParsedShow: Option[TvShow]) : Option[List[TvShow]] = {
+  for {
+    shows <- parsedShows
+    show <- newParsedShow
+  } yield shows.appended(show)
+}
