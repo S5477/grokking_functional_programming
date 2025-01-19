@@ -14,16 +14,17 @@ def main(): Unit = {
 
 case class TvShow(title: String, start: Int, end: Int)
 
-def sortShows(shows: List[TvShow]): List[TvShow] = {
-  shows.sortBy(TvShow => TvShow.end - TvShow.start).reverse
+def sortShows(shows: Option[List[TvShow]]): Option[List[TvShow]] = {
+  shows.map(_.sortBy(TvShow => TvShow.end - TvShow.start).reverse)
 }
 
-def SortRawShows(rawShows : List[String]) : List[TvShow] = {
+def SortRawShows(rawShows : List[String]) : Option[List[TvShow]] = {
   val TvShow = parseShows(rawShows)
   sortShows(TvShow)
 }
-def parseShows(rawShows: List[String]) : List[TvShow] = {
-  rawShows.map(parseShow).flatMap(_.toList)
+def parseShows(rawShows: List[String]) : Option[List[TvShow]] = {
+  val initialResult : Option[List[TvShow]] = Some(List.empty)
+  rawShows.map(parseShow).foldLeft(initialResult)(addOrResing)
 }
 
 def parseShow(rawShow: String) : Option[TvShow] = {
