@@ -1,11 +1,26 @@
 package example
 
-case class Artist(name: String, genre: String, origin: String)
+case class Artist(
+  name: String,
+  genre: String,
+  origin: String,
+  isActive: String,
+  yearActiveStart: String,
+  yearActiveEnd: String
+  )
 
 object Hello extends Greeting with App {
   println(greeting)
 }
 
-trait Greeting {
-  lazy val greeting: String = "hello"
+def searchArtist(
+  artists: List[Artist],
+  genres: List[String],
+  locations: List[String],
+  searchByActiveYears: Boolean,
+  activeAfter: Int,
+  activeBefore: Int
+) : List[Artist] = {
+  
 }
+
