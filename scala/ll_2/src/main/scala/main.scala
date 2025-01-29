@@ -6,7 +6,9 @@ def main(): Unit = {
   val rawShows = List(
     "Breaking Bad (2008-2013)",
     "The Wire (2002-2008)",
-    "Mad Men (2007-2015)"
+    "Mad Men (2007-2015)",
+    "The Office (2005-2013)",
+    "HZ (2005)"
   )
 
   println(SortRawShows(rawShows))
