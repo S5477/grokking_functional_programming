@@ -14,20 +14,20 @@ def main(): Unit = {
 
 case class TvShow(title: String, start: Int, end: Int)
 
-def sortShows(shows: Option[List[TvShow]]): Option[List[TvShow]] = {
+def sortShows(shows: Either[String, List[TvShow]]): Either[String, List[TvShow]] = {
   shows.map(_.sortBy(TvShow => TvShow.end - TvShow.start).reverse)
 }
 
-def SortRawShows(rawShows : List[String]) : Option[List[TvShow]] = {
+def SortRawShows(rawShows : List[String]) : Either[String, List[TvShow]] = {
   val TvShow = parseShows(rawShows)
   sortShows(TvShow)
 }
-def parseShows(rawShows: List[String]) : Option[List[TvShow]] = {
-  val initialResult : Option[List[TvShow]] = Some(List.empty)
+def parseShows(rawShows: List[String]) : Either[String, List[TvShow]] = {
+  val initialResult : Either[String, List[TvShow]] = Right(List.empty);
   rawShows.map(parseShow).foldLeft(initialResult)(addOrResing)
 }
 
-def parseShow(rawShow: String) : Option[TvShow] = {
+def parseShow(rawShow: String) : Either[String, TvShow] = {
   for {
     name <- extractName(rawShow)
     yearStart <- extractYearStart(rawShow).orElse(extractSingleYear(rawShow))
@@ -35,52 +35,54 @@ def parseShow(rawShow: String) : Option[TvShow] = {
   } yield TvShow(name, yearStart, yearEnd)
 }
 
-def extractName(raw: String): Option[String] = {
+def extractName(raw: String): Either[String, String] = {
   val breacketOpen = raw.indexOf('(')
 
-  for {
-    name <- Some(raw.substring(0, breacketOpen).trim)
-  } yield name
+  if (breacketOpen > 0) {
+    Right(raw.substring(0, breacketOpen).trim)
+  } else {
+    Left(s"Can't extract name from $raw")
+  }
 }
 
-def extractYearStart(raw: String): Option[Int] = {
+def extractYearStart(raw: String): Either[String, Int] = {
   val breacketOpen = raw.indexOf('(')
   val dash = raw.indexOf('-')
 
   for {
-    yearStr <- if(breacketOpen != -1 && dash > breacketOpen + 1)
-                  Some(raw.substring(breacketOpen + 1, dash))
-                else None
-    year <- yearStr.toIntOption
+    yearStr <- if (breacketOpen != -1 && dash > breacketOpen + 1)
+      Right(raw.substring(breacketOpen + 1, dash))
+    else Left(s"Can't extract start from $raw")
+    year <- yearStr.toIntOption.toRight(s"Can't parse $yearStr")
   } yield year
 }
 
-def extractYearEnd(raw: String): Option[Int] = {
+def extractYearEnd(raw: String):Either[String, Int] = {
   val breacketClose = raw.indexOf(')')
   val dash = raw.indexOf('-')
 
   for {
-    yearStr <- if (dash != -1 && dash + 1 < breacketClose)
-      Some(raw.substring(dash + 1, breacketClose))
-    else None
-    year <- yearStr.toIntOption
+    yearStr <- if (dash != -1 && breacketClose > dash + 1)
+      Right(raw.substring(dash + 1, breacketClose))
+    else Left(s"Can't extract end from $raw")
+    year <- yearStr.toIntOption.toRight(s"Can't parse $yearStr")
   } yield year
 }
 
-def extractSingleYear(raw: String): Option[Int] = {
+def extractSingleYear(raw: String): Either[String, Int] = {
   val breacketClose = raw.indexOf(')')
   val breacketOpen = raw.indexOf('(')
   val dash = raw.indexOf('-')
 
   for {
     yearStr <- if (dash == -1 && breacketOpen != -1 && breacketClose > breacketOpen + 1)
-      Some(raw.substring(breacketOpen + 1, breacketClose))
-    else None
-    year <- yearStr.toIntOption
+      Right(raw.substring(breacketOpen + 1, breacketClose))
+    else Left(s"Can't extract single from $raw")
+    year <- yearStr.toIntOption.toRight(s"Can't parse $yearStr")
   } yield year
 }
 
-def addOrResing(parsedShows: Option[List[TvShow]], newParsedShow: Option[TvShow]) : Option[List[TvShow]] = {
+def addOrResing(parsedShows: Either[String, List[TvShow]], newParsedShow: Either[String, TvShow]) : Either[String, List[TvShow]] = {
   for {
     shows <- parsedShows
     show <- newParsedShow
