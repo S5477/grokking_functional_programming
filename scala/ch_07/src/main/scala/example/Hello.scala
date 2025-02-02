@@ -13,14 +13,15 @@ object Hello {
   genres: List[Genre],
   locations: List[Location],
   searchByActiveYears: Boolean,
-  activeAfter: YearsActiveEnd,
-  activeBefore: YearsActiveStart
+  activeAfter: Int,
+  activeBefore: Option[Int]
   ) : List[Artist] = {
-    artists.filter(artist => {
+    artists.filter(artist => 
       (genres.isEmpty || genres.contains(artist.genre.name)) &&
       (locations.isEmpty || locations.contains(artist.origin.name)) &&
-      (!searchByActiveYears || (artist.isActive && artist.yearActiveStart.value >= activeAfter.value && artist.yearActiveEnd.value <= activeBefore.value))
-    })
+      (!searchByActiveYears ||
+      (artist.YearsActiveEnd.forall(_>= activeBefore)) && 
+        (artist.yearActiveStart <= activeBefore)))
   }
 }
 

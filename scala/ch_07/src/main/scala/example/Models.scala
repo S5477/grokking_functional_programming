@@ -4,7 +4,6 @@ object Models {
   opaque type Location = String
   opaque type Genre = String
   opaque type  YearsActiveStart = Int;
-  opaque type  YearsActiveEnd = Int;
 
   object Location {
     def apply(value: String) : Location = value
@@ -21,17 +20,12 @@ object Models {
     extension (yearActiveStart: YearsActiveStart) def value: Int = yearActiveStart
   }
 
-  object YearsActiveEnd {
-    def apply(value: Int) : YearsActiveEnd = value
-    extension (yearActiveEnd: YearsActiveEnd) def value: Int = yearActiveEnd
-  }
-
   case class Artist(
     name: String,
     genre: Genre,
     origin: Location,
     isActive: Boolean,
     yearActiveStart: YearsActiveStart,
-    yearActiveEnd: YearsActiveEnd
+    yearActiveEnd: Option[Int]
   )
 }
