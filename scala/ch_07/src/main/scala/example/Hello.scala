@@ -56,5 +56,17 @@ object Hello {
       }
     })
   }
+
+  def searchArtistByCondition(
+    artists: List[Artist],
+    requiredConditons: List[SearchCondition]): List[Artist] = {
+      requiredConditons.forall(condition =>
+        condition match {
+          case SearchByGenre(genres) => genres.contains(artist.genre)
+          case SearchByOrigin(origins) => origins.contains(artist.origin)
+          case SearchByYearsActive(start, end) => wasArtistActive(artist, start, end)
+        }
+      )
+    }
     
 }

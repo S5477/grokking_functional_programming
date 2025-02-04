@@ -13,6 +13,12 @@ object Models {
     case HipHop
   }
 
+  enum SearchCondition {
+    case SearchByGenre(genres: List[MusicGenre])
+    case SearchByOrigin(origins: List[Location])
+    case SearchByYearsActive(start: Int, end: Int)
+  }
+
   enum YearsActive  {
     case StillActive(start: Int)
     case ActiveBetween(start: Int, end: Int)
