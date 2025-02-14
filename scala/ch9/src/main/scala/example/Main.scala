@@ -8,4 +8,3 @@ object Main {
     println(currency)
   }
 }
-
